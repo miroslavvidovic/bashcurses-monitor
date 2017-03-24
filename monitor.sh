@@ -17,13 +17,14 @@
 # -----------------------------------------------------------------------------
 # Script:
 
+# Simple curses library
 source ./bashsimplecurses/simple_curses.sh
 
 main(){
   window "$(echo $USER)@$(hostname)" "blue" "23%"
-  append "Kernel: $(uname -r)"
-  addsep
-  append "Uptime: $(uptime | cut -d " " -f 4,5 | tr -d ,)"
+    append "Kernel: $(uname -r)"
+    addsep
+    append "Uptime: $(uptime | cut -d " " -f 4,5 | tr -d ,)"
   endwin
 
   window "Network" "yellow" "23%"
@@ -44,7 +45,7 @@ main(){
   endwin
 
   window "RAM" "red" "23%"
-  append "$(scripts/ram-memory.sh)"
+    append "$(scripts/ram-memory.sh)"
   endwin
 
   window "Swap" "cyan" "23%"
@@ -54,45 +55,50 @@ main(){
   col_right 
   move_up
 
-  window "Processes top15" "grey" "33%"
-    for i in `seq 2 16`; do
+  window "Processes top20" "grey" "33%"
+    for i in `seq 2 21`; do
       append_tabbed "`ps ax -o pid,rss,pcpu,ucmd --sort=-cpu,-rss | sed -n "$i,$i p" | awk '{printf "%s: %sM:  %s%%" , $4, $2/1024, $3 }'`" 3
     done
   endwin
 
   window "Temperature" "blue" "33%"
-  append "$(scripts/temperature.sh)"
+    append "$(scripts/temperature.sh)"
   endwin
 
-  window "Tabbed values" "red" "34%"
-  append_tabbed "colomn1:column2:column3" 3
-  append_tabbed "val 1:val 2:val 3" 3
-  append_tabbed "val 4:val 5:val 6" 3
+  window "Active services" "gray" "33%"
+    append "$(scripts/services.sh)"
   endwin
 
   col_right 
   move_up
+
+  window "Last kernel messages" "blue" "43%"
+    dmesg | tail -n 12 > /tmp/dmesg.txt
+    append_file /tmp/dmesg.txt
+    rm -f /tmp/dmesg.txt
+  endwin
 
   window "Weather" "blue" "43%"
     append "$(ansiweather -l Zvornik,BA -a false)"
   endwin
 
   window "Trash" "green" "12%"
-  append "$(scripts/trash.sh)"
+    append "$(scripts/trash.sh)"
   endwin
 
   col_right
 
   window "Taskwarrior" "blue" "22%"
-  append "Active: $(task status:pending count)"
-  append "Completed: $(task status:completed count)"
+    append "Active: $(task status:pending count)"
+    append "Completed: $(task status:completed count)"
   endwin
 
   col_right 
 
-  window "Trash" "green" "10%"
-  append "$(scripts/trash.sh)"
+  window "Downloads" "yellow" "10%"
+    append "$(ls -l ~/Downloads | wc -l)"
   endwin
+
 }
 
 main_loop 5
