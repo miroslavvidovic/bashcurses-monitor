@@ -8,12 +8,13 @@
 #   revision:  ---
 #   version:   1.0
 # -----------------------------------------------------------------------------
-# Requirements: ---
-# 
+# Requirements:
+#   bashsimplecurses(https://github.com/metal3d/bashsimplecurses)
+#   ansiweather
 # Description:
-# 
+#   System monitor with bashsimplecurses library.
 # Usage:
-# 
+#   bash monitor.sh
 # -----------------------------------------------------------------------------
 # Script:
 
@@ -21,7 +22,7 @@
 source ./bashsimplecurses/simple_curses.sh
 
 main(){
-  window "$(echo $USER)@$(hostname)" "blue" "23%"
+  window "$(echo $USER)@$(hostname)" "blue" "22%"
     append "Kernel: $(uname -r)"
     addsep
     append "Uptime: $(uptime | cut -d " " -f 4,5 | tr -d ,)"
@@ -30,7 +31,7 @@ main(){
   window "Network" "yellow" "23%"
     append "IP: $(scripts/ip.sh wlo1)"
     append "Wifi: $(scripts/wifi.sh wlo1)"
-  endwin 
+  endwin
 
   window "Battery" "magenta" "23%"
     append "$(scripts/battery.sh)"
@@ -52,7 +53,7 @@ main(){
     append "$(scripts/swap.sh)"
   endwin
 
-  col_right 
+  col_right
   move_up
 
   window "Processes top20" "grey" "33%"
@@ -69,36 +70,62 @@ main(){
     append "$(scripts/services.sh)"
   endwin
 
-  col_right 
+  window "Python" "green" "11%"
+    append "$(python3 --version | cut -d" " -f2)"
+  endwin
+
+  col_right
+  window "PHP" "blue" "11%"
+    append "$(php --version | awk -F'-' 'NR==1{print $1}' | cut -d" " -f2)"
+  endwin
+
+  col_right
+  window "Java" "yellow" "11%"
+    append "$(java -version 2>&1 | awk 'NR==1{print $3}' | tr -d "\"")"
+  endwin
+
+  col_right
   move_up
 
-  window "Last kernel messages" "blue" "43%"
-    dmesg | tail -n 12 > /tmp/dmesg.txt
+  window "Last kernel messages" "blue" "44%"
+    dmesg | tail -n 14 > /tmp/dmesg.txt
     append_file /tmp/dmesg.txt
     rm -f /tmp/dmesg.txt
   endwin
 
-  window "Weather" "blue" "43%"
+  window "Weather" "blue" "44%"
     append "$(ansiweather -l Zvornik,BA -a false)"
   endwin
 
-  window "Trash" "green" "12%"
-    append "$(scripts/trash.sh)"
+  window "Taskwarrior" "green" "44%"
+    append "Active: $(task status:pending count) Completed: $(task status:completed count)"
+  endwin
+
+  window "Files" "yellow" "44%"
+    append "Downloads: $(ls -l ~/Downloads | wc -l) Trash: $(scripts/trash.sh)"
+  endwin
+
+  window "Haskell" "green" "11%"
+    append "$(ghc --version | awk '{print $NF}')"
   endwin
 
   col_right
 
-  window "Taskwarrior" "blue" "22%"
-    append "Active: $(task status:pending count)"
-    append "Completed: $(task status:completed count)"
+  window "GCC" "green" "11%"
+    append "$(gcc --version | awk 'NR==1{print $4}')"
   endwin
 
-  col_right 
+  col_right
 
-  window "Downloads" "yellow" "10%"
-    append "$(ls -l ~/Downloads | wc -l)"
+  window "Perl" "blue" "11%"
+    append "$(perl -v | awk 'NR==2{print $9}' | tr -d "\(v" | tr -d "\)")"
   endwin
 
+  col_right
+
+  window "Bash" "blue" "11%"
+    append "$(echo $BASH_VERSION | cut -d"-" -f1)"
+  endwin
 }
 
 main_loop 5
