@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Tested on ubuntu
 trash=$(ls -A -1 ~/.local/share/Trash/files/ | wc -l)
 
 if [ "$trash" = "0" ];then 

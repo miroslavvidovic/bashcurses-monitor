@@ -1,8 +1,8 @@
 # Wifi Interface
-INTERFACE="wlo1"
+INTERFACE="wl3ps0"
 
 get_signal(){
-  if [ $(ifconfig "$INTERFACE" | grep UP | wc -l) -eq 1 ]; then
+  if [ $(iwconfig "$INTERFACE" | grep UP | wc -l) -eq 1 ]; then
     link_quality="$(iwconfig $INTERFACE | grep Quality | cut -d'=' -f2 | cut -d' ' -f1 | cut -d'/' -f1)"
     link_name="$(iwconfig $INTERFACE | grep ESSID | cut -d':' -f2)"
 
@@ -10,7 +10,7 @@ get_signal(){
 
     echo "[$SIGNAL_QUALITY%] on $link_name"
   else 
-    echo "No info."
+    echo "No info"
   fi
 }
 

@@ -30,11 +30,11 @@ main(){
 
   window "Network" "yellow" "23%"
     append "IP: $(scripts/ip.sh)"
-    append "Wifi: $(scripts/wifi.sh)"
+    append "Wifi: $(scripts/wifi.sh 2> /dev/null)"
   endwin
 
   window "Battery" "magenta" "23%"
-    append "$(scripts/battery.sh)"
+    append "$(scripts/battery.sh 2> /dev/null)"
   endwin
 
   window "CPU" "green" "23%"
@@ -106,7 +106,7 @@ main(){
   endwin
 
   window "Haskell" "green" "11%"
-    append "$(ghc --version | awk '{print $NF}')"
+    append "$(ghc --version 2> /dev/null | awk '{print $NF}')"
   endwin
 
   col_right
