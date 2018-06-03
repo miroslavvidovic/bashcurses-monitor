@@ -5,7 +5,7 @@ battery_path=/sys/class/power_supply/BAT0
 
 # Check for a directory on the battery_path
 check_battery_path() {
-  if [ ! -d battery_path ]; then
+  if [ ! -d "$battery_path" ]; then
     local path_status=0
   else
     local path_status=1
@@ -21,7 +21,7 @@ charger_connected() {
   else
     local batt_connected=1
   fi
-  echo "$batt_conected"
+  echo "$batt_connected"
 }
 
 # Read the battery percentage
