@@ -5,12 +5,12 @@
 #   author:    Miroslav Vidovic
 #   file:      monitor.sh
 #   created:   23.03.2017.-16:03:09
-#   revision:  ---
-#   version:   1.0
+#   revision:  03.06.2018.
+#   version:   1.1
 # -----------------------------------------------------------------------------
 # Requirements:
 #   bashsimplecurses(https://github.com/metal3d/bashsimplecurses)
-#   ansiweather
+#   ansiweather (https://github.com/fcambus/ansiweather)
 # Description:
 #   System monitor with bashsimplecurses library.
 # Usage:
@@ -29,8 +29,8 @@ main(){
   endwin
 
   window "Network" "yellow" "23%"
-    append "IP: $(scripts/ip.sh wlo1)"
-    append "Wifi: $(scripts/wifi.sh wlo1)"
+    append "IP: $(scripts/ip.sh)"
+    append "Wifi: $(scripts/wifi.sh)"
   endwin
 
   window "Battery" "magenta" "23%"
