@@ -2,9 +2,9 @@
 Simple system monitor with bashsimplecurses
 
 ### Requirements
-bashsimplecurses (https://github.com/metal3d/bashsimplecurses)
-ansiweather (https://github.com/fcambus/ansiweather)
-taskwarrior (https://taskwarrior.org/)
+- bashsimplecurses (https://github.com/metal3d/bashsimplecurses)
+- ansiweather (https://github.com/fcambus/ansiweather)
+- taskwarrior (https://taskwarrior.org/)
 
 ### How to run it
 1. Download the bashsimplecurses library
