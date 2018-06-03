@@ -1,34 +1,58 @@
 #!/usr/bin/env bash
 
+# Path to battery info
 battery_path=/sys/class/power_supply/BAT0
 
-battery_charge() {
-  battery_state=$(cat $battery_path/status)
-  battery_full=$battery_path/charge_full
-  battery_current=$battery_path/charge_now
+# Check for a directory on the battery_path
+check_battery_path() {
+  if [ ! -d battery_path ]; then
+    local path_status=0
+  else
+    local path_status=1
+  fi
+  echo "$path_status"
+}
+
+# Check if the charger is connected
+charger_connected() {
+  local battery_state=$(cat $battery_path/status)
   if [ "$battery_state" == 'Discharging' ]; then
-    BATT_CONNECTED=0
+    local batt_conected=0
   else
-    BATT_CONNECTED=1
+    local batt_connected=1
   fi
-  now=$(cat $battery_current)
-  full=$(cat $battery_full)
-  BATT_PCT=$((100 * now / full))
+  echo "$batt_conected"
 }
 
-print_status() {
-# Print the battery status
-  # If charger connected
-  if ((BATT_CONNECTED)); then
-    GRAPH="⚡"
-  else
-    GRAPH="|"
-  fi
-
-  echo "[$BATT_PCT%] $GRAPH"
+# Read the battery percentage
+battery_charge() {
+  local battery_full=$battery_path/charge_full
+  local battery_current=$battery_path/charge_now
+  local now=$(cat $battery_current)
+  local full=$(cat $battery_full)
+  local batt_percentage=$((100 * now / full))
+  echo "$batt_percentage"
 }
 
-battery_charge
-print_status
+main() {
+  path_status=$(check_battery_path)
+  # If there is a directory on the defined path
+  if [[ $path_status -eq 1 ]]; then
+    charging=$(charger_connected)
+    batt_percentage=$(battery_charge)
+    # If charger is connected
+    if ((charging)); then
+      graph="⚡"
+    else
+      graph="|"
+    fi
+    # Print the battery status
+    echo "[$batt_percentage%] $graph"
+  else
+    echo "No info"
+  fi
+}
+
+main
 
 exit 0
